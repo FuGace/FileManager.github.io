@@ -1,0 +1,13 @@
+header {
+    background-color: #039be5;
+    height: 100px;
+    position: relative;  
+}
+
+button {
+    position: absolute;
+    left: 30px;
+    top: 70px;
+    background-color: red;
+}
+
