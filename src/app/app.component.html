@@ -1,4 +1,5 @@
 <header> 
-    <button mat-fab color="red"><mat-icon>add</mat-icon></button>
+    <button mat-fab color="red" class="add"><mat-icon>add</mat-icon></button>
+    <button mat-fab color="blue" class="return"><mat-icon (click)="handleReturn()">undo</mat-icon></button>     
 </header>
-<foldertable></foldertable>
+<foldertable [parentFolderId]="parentFolderId" (handleItemClick)="handleClick($event)" [dataSource]="dataSource"></foldertable>

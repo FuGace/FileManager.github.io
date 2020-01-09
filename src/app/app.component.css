@@ -4,10 +4,17 @@ header {
     position: relative;  
 }
 
-button {
+.add {
     position: absolute;
-    left: 30px;
+    left: 10px;
     top: 70px;
     background-color: red;
+}
+
+.return {
+    position: absolute;
+    left: 80px;
+    top: 70px;
+    background-color: blue;
 }
 
