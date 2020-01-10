@@ -2,4 +2,5 @@
     <button mat-fab color="red" class="add"><mat-icon>add</mat-icon></button>
     <button mat-fab color="blue" class="return"><mat-icon (click)="handleReturn()">undo</mat-icon></button>     
 </header>
-<foldertable [parentFolderId]="parentFolderId" (handleItemClick)="handleClick($event)" [dataSource]="dataSource"></foldertable>
+<foldertable [parentFolderId]="parentFolderId" (handleItemClick)="getContent($event)" [dataSource]="dataSource"></foldertable>
+<app-file-upload [parentFolderId]="parentFolderId"></app-file-upload>

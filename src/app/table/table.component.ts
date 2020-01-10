@@ -13,19 +13,29 @@ export class TableComponent {
   displayedColumns: string[] = ['icon', 'name', 'created', 'updated', 'actions'];
   isEdit = false;       
   
-  @Input() dataSource: []
-  @Input() parentFolderId: []
+  @Input() dataSource: [];
+  @Input() parentFolderId: [];
   @Output() handleItemClick = new EventEmitter();
-  @Output() handleRemoveItem = new EventEmitter();
+  @Output() handleRemoveItem = new EventEmitter();  
   
-  constructor( private tableService: TableService) {
-    console.log(this.dataSource)
-  }
+  constructor( private tableService: TableService) {}
 
-  handleClick(id) {
-    console.log(id)
+  getContent(id:number) {    
     this.handleItemClick.emit(id);
   }
 
-  handleRemove(id){}
+  handleDelete(id:number) {    
+    if(confirm('Вы хотите это удалить?')) {
+      this.tableService.deleteFolder(id).subscribe(() => {
+        this.getContent(this.parentFolderId[this.parentFolderId.length - 1])
+      })
+      
+    }    
+  }
+
+  valueInput(value){
+    this.tableService.renamingName(value).subscribe(() => {
+      this.getContent(this.parentFolderId[this.parentFolderId.length - 1])
+    })
+  }
 }

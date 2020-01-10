@@ -9,12 +9,14 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { TableComponent } from './table/table.component';
 import { MatTableModule } from '@angular/material/table';
 import { MatIconModule, MatButtonModule } from '@angular/material';
+import { FileUploadComponent } from './file-upload/file-upload.component';
+import { ReactiveFormsModule } from '@angular/forms';
 
 
 @NgModule({
   declarations: [
     AppComponent,    
-    TableComponent   
+    TableComponent, FileUploadComponent   
   ],
   imports: [
     BrowserModule,
@@ -23,7 +25,8 @@ import { MatIconModule, MatButtonModule } from '@angular/material';
     BrowserAnimationsModule,
     MatTableModule,
     MatIconModule,
-    MatButtonModule
+    MatButtonModule,
+    ReactiveFormsModule
   ],
   providers: [],
   bootstrap: [AppComponent]

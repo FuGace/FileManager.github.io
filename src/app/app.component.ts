@@ -22,32 +22,42 @@ export class AppComponent {
   constructor( private tableService: TableService) {}
 
   ngOnInit() {
-    this.tableService.getRootFolder().subscribe((newDataSource) => {
-      this.dataSource = newDataSource.data.map((item) => ({...item, createdAt: beautifyDate(item.createdAt), updatedAt: beautifyDate(item.updatedAt)})) 
-    });
+    this.tableService.getRootFolder()
+      .subscribe((newDataSource) => {
+      this.dataSource = newDataSource["data"].map((item) => ({
+        ...item, 
+        createdAt: beautifyDate(item.createdAt), 
+        updatedAt: beautifyDate(item.updatedAt)
+        })
+      ) 
+    })
   }
 
-  handleReturn() {
-    console.log(1, this.dataSource)
+  getContent(parentFolderId) {
+    this.tableService.getFolderChildren(parentFolderId)
+      .subscribe((newDataSource) => {           
+      this.dataSource = newDataSource["data"].map((item)=>({
+        ...item,
+        createdAt: beautifyDate(item.createdAt),
+        updatedAt: beautifyDate(item.updatedAt)
+        })
+      )
+    })
+    this.parentFolderId.push(parentFolderId);
+  };
+
+  handleReturn() {    
     this.parentFolderId.pop();
     const lastChildId = this.parentFolderId[this.parentFolderId.length - 1]
     const fetchMethod = lastChildId ? 'getFolderChildren' : 'getRootFolder'
     this.tableService[fetchMethod](lastChildId)
       .subscribe((dataSource) => {           
-        this.dataSource = dataSource.data.map((item) => ({
-            ...item,
-            createdAt: beautifyDate(item.createdAt),
-            updatedAt: beautifyDate(item.updatedAt)
-          })
-        )
-        console.log(2, this.dataSource)
-      })
-  };
-  
-  handleClick(parentFolderId){
-    this.tableService.getFolderChildren(parentFolderId).subscribe((newDataSource) => {           
-      this.dataSource = newDataSource.data.map((item)=>({...item, createdAt: beautifyDate(item.createdAt), updatedAt: beautifyDate(item.updatedAt)}))
-    });
-    this.parentFolderId.push(parentFolderId);
-  };
+      this.dataSource = dataSource["data"].map((item) => ({
+        ...item,
+        createdAt: beautifyDate(item.createdAt),
+        updatedAt: beautifyDate(item.updatedAt)
+        })
+      )        
+    })
+  };  
 }
