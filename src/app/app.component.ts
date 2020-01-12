@@ -3,23 +3,28 @@ import { TableService } from './table.service';
 import { beautifyDate } from './utils';
 import { map } from 'rxjs/operators';
 
+export class IdsHelper {
+  ids = [];
 
-interface ParendId{
-  id: string  
-}
+  getLastId = () => this.ids[this.ids.length - 1] || null
+  addId = (id: number) => this.ids.push(id)
+  removeLastId = () => this.ids.pop()
+};
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css'],
-  providers: [ TableService]
+  providers: [TableService]
 })
-
 export class AppComponent {
   dataSource = [];
-  parentFolderId = [];
+  parentFolderId = new IdsHelper()
+  nameFolder = '';
 
-  constructor( private tableService: TableService) {}
+  constructor(private tableService: TableService) {}
+
+  isEdit = true;
 
   ngOnInit() {
     this.tableService.getRootFolder()
@@ -34,7 +39,7 @@ export class AppComponent {
   }
 
   getContent(parentFolderId) {
-    this.tableService.getFolderChildren(parentFolderId)
+    this.tableService.getFolderChildren(parentFolderId || '')
       .subscribe((newDataSource) => {           
       this.dataSource = newDataSource["data"].map((item)=>({
         ...item,
@@ -43,12 +48,12 @@ export class AppComponent {
         })
       )
     })
-    this.parentFolderId.push(parentFolderId);
+    this.parentFolderId.addId(parentFolderId);
   };
 
   handleReturn() {    
-    this.parentFolderId.pop();
-    const lastChildId = this.parentFolderId[this.parentFolderId.length - 1]
+    this.parentFolderId.removeLastId();
+    const lastChildId = this.parentFolderId.getLastId()
     const fetchMethod = lastChildId ? 'getFolderChildren' : 'getRootFolder'
     this.tableService[fetchMethod](lastChildId)
       .subscribe((dataSource) => {           
@@ -59,5 +64,28 @@ export class AppComponent {
         })
       )        
     })
-  };  
+  }
+
+  folderNameChange(value) {
+    this.nameFolder = value    
+  };
+  
+  addFolder() {  
+    const formData: any = new FormData();    
+    const requestObj = {
+      fileTypeEnum: "FOLDER",
+      parentFolderId : this.parentFolderId.getLastId(),
+      name: this.nameFolder
+    }
+    const blobRequestObj = new Blob([JSON.stringify(requestObj)], {
+      type: 'application/json',
+    });    
+    formData.append("requestObj", blobRequestObj);    
+    this.tableService
+      .sendFile(formData)
+      .toPromise()
+      .then(() => {        
+        return this.getContent(this.parentFolderId.getLastId())
+      })
+  }  
 }

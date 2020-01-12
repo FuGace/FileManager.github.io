@@ -1,5 +1,6 @@
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { TableService } from '../table.service';
+import { IdsHelper } from '../app.component';
 
   
 @Component({
@@ -11,14 +12,16 @@ import { TableService } from '../table.service';
 
 export class TableComponent {
   displayedColumns: string[] = ['icon', 'name', 'created', 'updated', 'actions'];
-  isEdit = false;       
+  isEdit = false;
+  newName = ''
+  newBody = {}
   
   @Input() dataSource: [];
-  @Input() parentFolderId: [];
+  @Input() parentFolderId: IdsHelper;
   @Output() handleItemClick = new EventEmitter();
   @Output() handleRemoveItem = new EventEmitter();  
   
-  constructor( private tableService: TableService) {}
+  constructor( private tableService: TableService) {}  
 
   getContent(id:number) {    
     this.handleItemClick.emit(id);
@@ -26,16 +29,28 @@ export class TableComponent {
 
   handleDelete(id:number) {    
     if(confirm('Вы хотите это удалить?')) {
-      this.tableService.deleteFolder(id).subscribe(() => {
-        this.getContent(this.parentFolderId[this.parentFolderId.length - 1])
-      })
-      
+      this.tableService
+      .removeObj(id)
+      .subscribe(() => {
+        this
+          .getContent(this.parentFolderId.getLastId())
+      })      
     }    
   }
 
-  valueInput(value){
-    this.tableService.renamingName(value).subscribe(() => {
-      this.getContent(this.parentFolderId[this.parentFolderId.length - 1])
-    })
+  nameChange(value){
+    this.newName = value
+    this.newBody = {
+      "name": this.newName
+    }
+  }
+  
+  addChangeName(parentFolderId){
+    this.tableService
+    .renamingName(parentFolderId, this.newBody)
+    .subscribe(() => {
+      this
+        .getContent(this.parentFolderId.getLastId())
+    })      
   }
 }

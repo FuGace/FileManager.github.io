@@ -18,3 +18,10 @@ header {
     background-color: blue;
 }
 
+.input {
+    position: absolute;
+    top: 50px;    
+    text-align: center;
+    background-color: white;
+    left: 150px;
+}

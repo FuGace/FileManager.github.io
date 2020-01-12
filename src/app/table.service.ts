@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { HttpHeaders } from '@angular/common/http';
 
 @Injectable()
 
@@ -19,22 +20,23 @@ export class TableService {
     return this.http.get(`${this.ROOT_URL}/file`, { params });    
   }
 
-  public sendFile(formData) {    
-    return this.http.post(`${this.ROOT_URL}/file`, formData, 
-    { headers: {
-      'Content-Type': "multipart/form-data" },
-    })
-      .subscribe(
-      (response) => console.log(response),
-      (error) => console.log(error)
-    )
+  public sendFile(formData) {
+    const myHeaders = new HttpHeaders();
+    myHeaders.append("Content-Type", "multipart/form-data")  
+    return this.http.post(
+      `${this.ROOT_URL}/file`, 
+      formData, 
+      { headers: myHeaders }
+    )    
   } 
   
-  public deleteFolder(id: number) {    
-    return this.http.delete(`${this.ROOT_URL}/file/`+id)
+  public removeObj(parentFolderId: number) {    
+    return this.http.delete(
+      `${this.ROOT_URL}/file/` + parentFolderId)
   }
 
-  public renamingName(name) {
-    return this.http.put(`${this.ROOT_URL}/file/`, name)
-  }
+  public renamingName(parentFolderId: number, newBody) {
+    return this.http.put(
+      `${this.ROOT_URL}/file/` + parentFolderId, newBody)
+  }  
 }
