@@ -1,4 +1,4 @@
-<header> 
+<header>
     <button mat-fab color="red" class="add" title="Добавить папку" (click)="isEdit = !isEdit"><mat-icon>add</mat-icon></button>
     <button mat-fab color="blue" class="return" title="Вернуться назад"><mat-icon (click)="handleReturn()">undo</mat-icon></button>
     <div class="input" *ngIf="!isEdit">
@@ -9,7 +9,7 @@
         <button mat-icon-button title="Закрыть" (click)="isEdit = !isEdit">
             <mat-icon>clear</mat-icon>
         </button>
-    </div>       
+    </div>
 </header>
 <foldertable [parentFolderId]="parentFolderId" (handleItemClick)="getContent($event)" [dataSource]="dataSource"></foldertable>
 <app-file-upload [parentFolderId]="parentFolderId" (refreshPage)="getContent($event)"></app-file-upload>

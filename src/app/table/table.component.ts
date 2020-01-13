@@ -23,11 +23,11 @@ export class TableComponent {
   
   constructor( private tableService: TableService) {}  
 
-  getContent(id:number) {    
+  getContent(id:number) {
     this.handleItemClick.emit(id);
   }
 
-  handleDelete(id:number) {    
+  handleDelete(id:number) {
     if(confirm('Вы хотите это удалить?')) {
       this.tableService
       .removeObj(id)
